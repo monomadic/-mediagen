@@ -1,7 +1,12 @@
 mod filesystem;
 
 fn main() {
-    println!("Hello, world!");
+    run();
+}
 
-
+fn run() -> Result<(), Box<dyn std::error::Error>> {
+    for entry in walkdir::WalkDir::new("media") {
+        println!("{}", entry?.path().display());
+    };
+    Ok(())
 }

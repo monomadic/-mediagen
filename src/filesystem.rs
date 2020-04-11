@@ -6,9 +6,21 @@ use std::io;
 use std::fs::{self, DirEntry};
 use std::path::Path;
 
-/// recursively walk directory
-pub(crate) fn walk_dir(dir: &Path, cb: &dyn Fn(&DirEntry)) -> io::Result<()> {
-    if dir.is_dir() {
+/// Recursively walk a directory
+///
+/// # Examples
+///
+/// ```no_run
+/// let mut entries = fs::walk_dir(".")?
+///     .map(|res| res.map(|e| e.path()))
+///     .collect::<Result<Vec<_>, io::Error>>()?;
+/// ```
+///
+pub(crate) fn walk_dir<P: AsRef<Path>>(
+    dir: P,
+    cb: &dyn Fn(&DirEntry)
+) -> io::Result<()> {
+    if dir.as_ref().is_dir() {
         for entry in fs::read_dir(dir)? {
             let entry = entry?;
             let path = entry.path();
